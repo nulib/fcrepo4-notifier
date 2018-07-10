@@ -1,0 +1,25 @@
+---
+version: '3.4'
+volumes:
+  fedora:
+services:
+  notifier:
+    depends_on:
+    - fedora
+    image: nulib/fcrepo-notifier
+    build:
+      context: .
+    environment:
+    - AWS_DEFAULT_REGION
+    - AWS_ACCESS_KEY_ID
+    - AWS_SECRET_ACCESS_KEY
+    - SNS_TOPIC
+    - STOMP_HOST=fedora
+    - STOMP_TOPIC=/topic/fedora
+  fedora:
+    image: nulib/fcrepo4
+    volumes:
+    - fedora:/data
+    ports:
+    - 8984:8080
+    - 61613:61613
